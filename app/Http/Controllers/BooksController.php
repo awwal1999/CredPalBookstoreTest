@@ -18,6 +18,9 @@ class BooksController extends Controller
         $sortColumn = request()->has('sortColumn') ?: 'id';
         $sortDirection = request()->has('sortDirection') ?: 'DESC';
 
+        if (request()->has('title')) {
+            return BookResource::collection(Book::where('title',request('title'))->orderBy($sortColumn, $sortDirection)->paginate(25));
+        }
         return BookResource::collection(Book::orderBy($sortColumn, $sortDirection)->paginate(25));
     }
 
