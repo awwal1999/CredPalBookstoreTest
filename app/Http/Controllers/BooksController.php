@@ -15,7 +15,10 @@ class BooksController extends Controller
      */
     public function index()
     {
-        return BookResource::collection(Book::with(['authors', 'reviews'])->paginate(25));
+        $sortColumn = request()->has('sortColumn') ?: 'id';
+        $sortDirection = request()->has('sortDirection') ?: 'DESC';
+
+        return BookResource::collection(Book::orderBy($sortColumn, $sortDirection)->paginate(25));
     }
 
 
