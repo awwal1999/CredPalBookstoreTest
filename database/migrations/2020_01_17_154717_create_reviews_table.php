@@ -21,6 +21,7 @@ class CreateReviewsTable extends Migration
             $table->string('comment');
             $table->timestamps();
 
+            $table->unique(['user_id', 'book_id']);
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('book_id')->references('id')->on('books')->onDelete('cascade');
         });
