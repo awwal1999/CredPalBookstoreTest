@@ -6,6 +6,7 @@ use App\Author;
 use App\Book;
 use Illuminate\Http\Request;
 use App\Http\Resources\Book as BookResource;
+use App\Review;
 
 class BooksController extends Controller
 {
@@ -28,13 +29,24 @@ class BooksController extends Controller
         if (request()->has('authors')) {
             return $this->searchByAuthor();
         }
+
         return BookResource::collection(Book::orderBy($this->sortColumn, $this->sortDirection)->paginate(25));
     }
 
 
-    public function store()
+    public function store(Request $request)
     {
-        return 'ilovr you';
+        $this->validateBook();
+        $book = Book::create([
+            'isbn' => request('isbn'),
+            'title' => request('title'),
+            'description' => request('description')
+        ]);
+
+        $book->authors()->attach( request('authors') );
+
+        return response()->json( new BookResource( $book ), 201);
+
     }
     protected function seachByTitle()
     {
@@ -47,5 +59,16 @@ class BooksController extends Controller
                 $q->whereIn('author_id', $authors);
             })->paginate(25);
             return BookResource::collection($books);
+    }
+
+    public function validateBook()
+    {
+        return request()->validate([
+            'isbn' => 'required|digits:13',
+            'title' => 'required|string|max:190|min:3',
+            'description' => 'required|string',
+            'authors' => 'required|array',
+            'authors.*' => 'integer|exists:authors,id',
+        ]);
     }
 }
