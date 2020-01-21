@@ -64,7 +64,7 @@ class BooksController extends Controller
     public function validateBook()
     {
         return request()->validate([
-            'isbn' => 'required|digits:13',
+            'isbn' => 'required|digits:13|unique:books',
             'title' => 'required|string|max:190|min:3',
             'description' => 'required|string',
             'authors' => 'required|array',
