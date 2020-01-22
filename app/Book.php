@@ -9,11 +9,12 @@ class Book extends Model
     protected $fillable = [
         'isbn', 'title', 'description', 
     ];
+
     protected $with = [
         'authors', 'reviews'
     ];
 
-    protected $appends = ['ratings'];
+    protected $appends = ['reviews_count'];
 
     public function authors()
     {
@@ -25,20 +26,8 @@ class Book extends Model
         return $this->hasMany('App\Review');
     }
 
-    public static function avg_review()
+    public function getReviewsCountAttribute()
     {
-        return $this->reviews()->avg('review');
-    }
-
-    public function getRatingsAttribute()
-    {
-        return $this->reviews()->avg('review') ?: 0;
-    }
-
-    public function reviewsCount()
-    {
-    return $this->reviews()
-        ->selectRaw('book_id, count(*) as aggregate')
-        ->groupBy('book_id');
+        return $this->reviews()->count() ?: 0;
     }
 }

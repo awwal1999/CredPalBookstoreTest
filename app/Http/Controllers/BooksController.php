@@ -7,6 +7,7 @@ use App\Book;
 use Illuminate\Http\Request;
 use App\Http\Resources\Book as BookResource;
 use App\Review;
+use Illuminate\Support\Facades\DB;
 
 class BooksController extends Controller
 {
@@ -48,10 +49,12 @@ class BooksController extends Controller
         return response()->json( new BookResource( $book ), 201);
 
     }
+
     protected function seachByTitle()
     {
         return BookResource::collection(Book::where('title',request('title'))->orderBy($this->sortColumn, $this->sortDirection)->paginate(25));
     }
+    
     protected function searchByAuthor()
     {
         $authors = explode(',',request('authors'));

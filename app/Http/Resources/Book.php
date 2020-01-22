@@ -19,7 +19,10 @@ class Book extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'authors' => Author::collection( $this->authors ),
-            'reviews' => $this->reviews,
+            'reviews' => [
+                'avg' => $this->avg_review,
+                'count' => $this->reviewsCount,
+            ]
         ];
     }
 }

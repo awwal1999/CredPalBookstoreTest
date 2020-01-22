@@ -18,6 +18,7 @@ class CreateBooksTable extends Migration
             $table->string('title');
             $table->string('isbn');
             $table->text('description');
+            $table->decimal('avg_review', 3,1)->default(0);
             $table->timestamps();
         });
     }
